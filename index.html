@@ -8,13 +8,26 @@
 </head>
 <body>
     <h1>Pre Scale Performnce<br>Made by:Arpan Poudel.</h1>
-    <p></p>
+     <p></p>
+
     <canvas></canvas>
-    <div id="ui">
-        <a>+100</a><a>method: scale</a><a>-100</a>
+
+    <div id = "ui">
+
+      <a>+ 100</a><a>method: scale</a><a>- 100</a>
+
     </div>
-    <p>
-        
-    </p>
-</body>
+
+    <p>This application compares the rendering speed of three drawing methods: scale,
+      pre-scale, and pre-scaled-sheet. Scale draws graphics from the source image
+      to a buffer, which is then scaled and drawn to the screen. Pre-scale creates
+      individual scaled canvas elements for each sprite in the source image and then
+      draws them directly to the screen. Pre-scaled-sheet draws the source image to
+      a larger canvas element, and then those scaled graphics are drawn directly to
+      the screen.</p>
+
+    <script src = "pre-scale-performance.js" type = "text/javascript"></script>
+
+  </body>
+
 </html>
