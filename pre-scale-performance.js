@@ -116,6 +116,8 @@
 
   renderScaledSheet = function() {
 
+   
+
     var scaled_size = display.tile_sheet.tile_size * display.scale;
 
     for (let index = game.object_manager.ball_pool.active_objects.length - 1; index > -1; -- index) {
@@ -133,6 +135,7 @@
 
   renderPreScale = function() {
 
+
     for (let index = game.object_manager.ball_pool.active_objects.length - 1; index > -1; -- index) {
 
       let ball = game.object_manager.ball_pool.active_objects[index];
@@ -145,6 +148,7 @@
   };
 
   renderScale = function() {
+
 
     for (let index = game.object_manager.ball_pool.active_objects.length - 1; index > -1; -- index) {
 
@@ -278,38 +282,136 @@
 
       },
 
-      render:function(){
-        var time=window.performance.now();
+      render:function() {
+
+        var time = window.performance.now();
 
         display.render();
 
-        time=window.PerformanceEntry.now() - time;
+        time = window.performance.now() - time;
 
         tracker.iteration ++;
         tracker.time += time;
-        tracker.averge=tracker.time/tracker.iteration;
+        tracker.average = tracker.time / tracker.iteration;
 
-        display.p.innerHTML = display.render.name +"; "+tracker.average.toPrecisioj(2)+"ms/frame to render";
+        display.p.innerHTML = display.render.name + ": " + tracker.average.toPrecision(2) + " ms / frame to render";
+
       },
 
-      update:function(){
-        for(let index=game.object_manager.ball_pool.active_objects.length-1; -- index){
-          let ball= game.object_manager.ball_pool.active_objects[index];
+      update:function() {
+
+        for (let index = game.object_manager.ball_pool.active_objects.length - 1; index > -1; -- index) {
+
+          let ball = game.object_manager.ball_pool.active_objects[index];
 
           ball.update();
           ball.collideWorld();
 
         }
+
       },
 
-      start:function(){
+      start:function() {
+
         this.animation_frame_request = window.requestAnimationFrame(this.loop);
-            this.accumulated_time = this.time_step;
-            this.time = window.performance
+        this.accumulated_time = this.time_step;
+        this.time = window.performance.now();
+
       }
+
+    },
+
+    object_manager: {
+
+      ball_pool: new Pool(Ball)
+
+    },
+
+    world:{
+
+      height:360,
+      width:640
+
     }
 
-    
+  };
+
+  tracker = {
+
+    average:0,
+    iteration:0,
+    time:0,
+
+    reset:function() {
+
+      this.average = 0;
+      this.iteration = 0;
+      this.time = 0;
+
+    }
+
+  };
+
+
+  let buttons = document.querySelectorAll("a");
+
+  for (let index = buttons.length - 1; index > -1; -- index) {
+
+    buttons[index].addEventListener("click", function(event) {
+
+      switch(this.innerHTML) {
+
+        case "+ 100":
+
+          game.object_manager.ball_pool.activate(100, Ball.reset);
+
+        break;
+        case "- 100":
+
+          game.object_manager.ball_pool.store(100);
+
+        break;
+        case "method: scale":
+
+          this.innerHTML = "method: pre-scale";
+          display.render = renderPreScale;
+
+        break;
+        case "method: pre-scale":
+
+          this.innerHTML = "method: pre-scaled-sheet";
+          display.render = renderScaledSheet;
+
+        break;
+
+        case "method: pre-scaled-sheet":
+
+          this.innerHTML = "method: scale";
+          display.render = renderScale;
+
+        break;
+
+      }
+
+      tracker.reset();
+
+    });
+
   }
-    
-})
+
+  display.tile_sheet.image.addEventListener("load", function(event) {
+
+    display.buffer.canvas.height = game.world.height;
+    display.buffer.canvas.width = game.world.width;
+
+    display.resize();
+
+    game.engine.start();
+
+  });
+
+  display.tile_sheet.image.src = "pre-scale-performance.png";
+
+  window.addEventListener("resize", display.resize);
+
+})();
