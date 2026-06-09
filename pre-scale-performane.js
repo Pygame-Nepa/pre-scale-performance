@@ -116,7 +116,6 @@
 
   renderScaledSheet = function() {
 
-
     var scaled_size = display.tile_sheet.tile_size * display.scale;
 
     for (let index = game.object_manager.ball_pool.active_objects.length - 1; index > -1; -- index) {
@@ -134,7 +133,6 @@
 
   renderPreScale = function() {
 
-   
     for (let index = game.object_manager.ball_pool.active_objects.length - 1; index > -1; -- index) {
 
       let ball = game.object_manager.ball_pool.active_objects[index];
@@ -148,7 +146,6 @@
 
   renderScale = function() {
 
-    
     for (let index = game.object_manager.ball_pool.active_objects.length - 1; index > -1; -- index) {
 
       let ball = game.object_manager.ball_pool.active_objects[index];
@@ -246,12 +243,73 @@
     }
 
   };
-    game={
-        engine={
-            accumulated_time:undefined,
-            animation_frame_request:undefined,
+
+  game = {
+
+    engine: {
+
+      accumulated_time:undefined,
+      animation_frame_request:undefined,
+      time:undefined,
+      time_step:1000/60,
+      needs_redraw:false,
+
+      loop:function(time_stamp) {
+
+        game.engine.animation_frame_request = window.requestAnimationFrame(game.engine.loop);
+
+        game.engine.accumulated_time += time_stamp - game.engine.time;
+        game.engine.time = time_stamp;
+
+        while (game.engine.accumulated_time >= game.engine.time_step) {
+
+          game.engine.accumulated_time -= game.engine.time_step;
+
+          game.engine.update();
+          game.engine.needs_redraw = true;
 
         }
+
+        if (game.engine.needs_redraw) {
+
+          game.engine.render();
+
+        }
+
+      },
+
+      render:function(){
+        var time=window.performance.now();
+
+        display.render();
+
+        time=window.PerformanceEntry.now() - time;
+
+        tracker.iteration ++;
+        tracker.time += time;
+        tracker.averge=tracker.time/tracker.iteration;
+
+        display.p.innerHTML = display.render.name +"; "+tracker.average.toPrecisioj(2)+"ms/frame to render";
+      },
+
+      update:function(){
+        for(let index=game.object_manager.ball_pool.active_objects.length-1; -- index){
+          let ball= game.object_manager.ball_pool.active_objects[index];
+
+          ball.update();
+          ball.collideWorld();
+
+        }
+      },
+
+      start:function(){
+        this.animation_frame_request = window.requestAnimationFrame(this.loop);
+            this.accumulated_time = this.time_step;
+            this.time = window.performance
+      }
     }
+
+    
+  }
     
 })
