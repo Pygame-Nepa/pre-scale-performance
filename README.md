@@ -18,6 +18,8 @@ You can see live here: https://pre-scale-performance.netlify.app/
 
 ## ScreenShot:
 
+<img width="720" height="1276" alt="screenshot-1781011190978-2" src="https://github.com/user-attachments/assets/0bb29693-0f42-43f4-b130-0b4239a28a15" />
+<img width="720" height="1309" alt="screenshot-1781011190001-1" src="https://github.com/user-attachments/assets/bfcd51f0-f8b2-4ef9-ac07-1a52d6b80c4c" />
 
 
 
